@@ -1,6 +1,6 @@
 {
   "name": "commoon-society",
-  "version": "0.4.4",
+  "version": "0.6.0",
   "description": "COMMOON SOCIETY — classroom multiplayer pixel-art board game",
   "main": "server/index.js",
   "scripts": {
