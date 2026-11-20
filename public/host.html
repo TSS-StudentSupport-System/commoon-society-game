@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="th" data-theme="day">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Host · COMMOON SOCIETY</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@400;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body data-theme="day">
+  <div id="connecting" class="center-msg"><div class="big">กำลังเชื่อมต่อ…</div></div>
+
+  <!-- LOBBY -->
+  <main id="lobby" class="host-lobby hidden">
+    <section class="code-panel pframe">
+      <div class="pixel-title" style="font-size:.8rem">COMMOON SOCIETY</div>
+      <div class="thai-head" id="roomName"></div>
+      <div><div class="muted">รหัสห้อง · ROOM CODE</div><div class="room-code" id="roomCode">-----</div></div>
+      <img class="qr" id="qr" alt="QR code สำหรับเข้าร่วม">
+      <div><div class="muted">หรือเปิด</div><div class="join-url" id="joinUrl"></div></div>
+      <div class="row" style="justify-content:center">
+        <button class="btn small" id="copyBtn">📋 คัดลอกลิงก์</button>
+        <a class="btn small" id="boardLink" target="_blank" rel="noopener">🖥️ เปิดจอบอร์ดแยก</a>
+        <a class="btn small" id="playLink" target="_blank" rel="noopener">📱 โฮสต์ร่วมเล่นด้วย</a>
+      </div>
+    </section>
+    <section class="players-panel pframe">
+      <div class="players-head">
+        <div><h2 class="thai-head" style="margin:0">ผู้เล่นในห้อง <span id="pCount">0</span></h2>
+          <div class="muted" id="pReq"></div></div>
+        <div class="row">
+          <button class="btn small danger" id="closeBtn">ปิดห้อง</button>
+        </div>
+      </div>
+      <div class="row bot-row">
+        <strong>🤖 ทดลองเล่นกับบอท</strong>
+        <button class="btn small" data-bots="1">+1 บอท</button>
+        <button class="btn small" data-bots="4">+4 บอท</button>
+        <button class="btn small" data-bots="10">+10 บอท</button>
+        <button class="btn small" id="rmBots">ลบบอททั้งหมด</button>
+      </div>
+      <div class="player-grid" id="playerGrid"></div>
+      <div class="start-bar">
+        <div class="muted" id="readyInfo"></div>
+        <button class="btn go" id="startBtn" style="min-width:220px;font-size:1.15rem">▶ เริ่มเกม</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- GAME -->
+  <div id="game" class="hidden">
+    <div class="stage" id="stage"></div>
+    <aside class="drawer pframe" id="drawer" aria-label="Host controls">
+      <div class="row" style="justify-content:space-between"><strong class="thai-head">แผงควบคุมโฮสต์</strong><button class="btn small" id="hideDrawer">ซ่อน ▸</button></div>
+      <p class="muted" style="font-size:.82rem;margin:.4rem 0 0">ไม่แสดงคุณลักษณะลับของใคร ฉายขึ้นจอได้ · H ซ่อน/แสดง · Space พัก · N ข้าม</p>
+      <h3>เวลา</h3>
+      <div class="grid">
+        <button class="btn small" data-cmd="pause" id="pauseBtn">⏸ พัก</button>
+        <button class="btn small go" data-cmd="next" id="nextBtn">ข้าม ▶</button>
+        <button class="btn small" data-cmd="addTime" data-seconds="30">+30 วิ</button>
+        <button class="btn small" data-cmd="addTime" data-seconds="60">+60 วิ</button>
+      </div>
+      <p class="muted" style="font-size:.8rem">1 วัน = 1 นาที · หยุดอ่านไพ่ 45 วินาที · ตอนโหวตเวลาในเกมหยุด</p>
+      <h3>เสียง</h3>
+      <div class="grid">
+        <button class="btn small px-toggle" id="musicBtn"></button>
+        <button class="btn small px-toggle" id="sfxBtn"></button>
+      </div>
+      <label class="vol-row"><span id="volIcon" aria-hidden="true"></span><span class="sr-only">ระดับเสียง</span><input type="range" id="volIn" min="0" max="100"></label>
+      <h3>ผู้เล่น · <span id="connCount"></span></h3>
+      <div class="conn" id="connList"></div>
+      <h3>เกม</h3>
+      <button class="btn small danger" data-cmd="endGame" data-confirm="จบเกมตอนนี้? ระบบจะตัดสินจากสถานะเฉลี่ย" style="width:100%">จบเกม</button>
+      <div id="endTools" class="hidden" style="display:grid;gap:.5rem;margin-top:.8rem">
+        <button class="btn small primary" id="dlBtn">⬇️ ดาวน์โหลดสรุปเกม (สำหรับครู)</button>
+        <div id="reflList" class="conn" style="max-height:none"></div>
+      </div>
+    </aside>
+    <button class="btn small drawer-toggle hidden" id="showDrawer">⚙️ Host</button>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script type="module" src="/js/host.js"></script>
+</body>
+</html>

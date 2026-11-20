@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="th" data-theme="day">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>COMMOON SOCIETY</title>
+  <meta name="description" content="One School. Many Stories. Every Decision Matters.">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@400;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="landing" data-theme="day">
+  <canvas class="bg" id="bg" aria-hidden="true"></canvas>
+  <button class="btn small theme-toggle" id="themeBtn" aria-label="สลับกลางวัน/กลางคืน">🌙 Night</button>
+
+  <main class="content">
+    <section class="hero pframe">
+      <h1 class="logo">COMMOON<br>SOCIETY</h1>
+      <p class="tagline">🌕 คำสาปแสงจันทร์ที่โรงเรียนมูนสคูล<br><span class="muted">หนึ่งโรงเรียน หลายเรื่องราว ทุกการตัดสินใจมีความหมาย</span></p>
+      <div class="field" style="max-width:360px;margin:0 auto 1rem;text-align:left"><label for="nameIn">ตั้งชื่อตัวละครของคุณ</label>
+        <input id="nameIn" maxlength="16" autocomplete="off" placeholder="เช่น ฟ้าคราม, ต้นข้าว">
+        <small class="muted">⚠️ ห้ามใช้ชื่อจริง ไม่ต้องสมัครสมาชิก</small></div>
+      <div class="actions">
+        <button class="btn primary" id="createBtn">🏫 สร้างห้องใหม่</button>
+        <button class="btn warm" id="joinBtn">📱 เข้าร่วมห้อง</button>
+      </div>
+      <div class="links">
+        <button class="btn small" id="howBtn">วิธีเล่น</button>
+        <button class="btn small" id="aboutBtn">เกี่ยวกับเกม</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Create room: choose mode -->
+  <div class="modal hidden" id="createModal" role="dialog" aria-modal="true" aria-labelledby="createTitle">
+    <div class="pframe">
+      <button type="button" class="btn small close" data-close>✕</button>
+      <h2 id="createTitle" class="thai-head">เลือกโหมดเกม</h2>
+      <div class="mode-list">
+        <button class="btn mode-btn" data-mode="short"><b>⏱ ระยะสั้น</b><small>7 วัน · ประมาณ 15 นาที · ไม่มีภารกิจทูต</small></button>
+        <button class="btn mode-btn" data-mode="medium"><b>🕐 ระยะกลาง</b><small>15 วัน · ประมาณ 30 นาที · มีภารกิจทูตทุก 2 วัน</small></button>
+        <button class="btn mode-btn" data-mode="marathon"><b>🏃 มาราธอน</b><small>ไม่จำกัดวัน · เล่นจนกว่าจะมีฝ่ายชนะ · เวลาว่าง</small></button>
+      </div>
+      <p class="muted" style="font-size:.88rem">ผู้เล่น 5–50 คนต่อห้อง · คุณเป็นโฮสต์ (ครูหรือใครก็ได้) และจะได้รหัสห้องกับ QR Code</p>
+    </div>
+  </div>
+
+  <!-- Join room -->
+  <div class="modal hidden" id="joinModal" role="dialog" aria-modal="true" aria-labelledby="joinTitle">
+    <form class="pframe" id="joinForm">
+      <button type="button" class="btn small close" data-close>✕</button>
+      <h2 id="joinTitle" class="thai-head">เข้าร่วมห้อง</h2>
+      <div class="field"><label for="jCode">รหัสห้อง</label>
+        <input id="jCode" name="code" autocomplete="off" autocapitalize="characters" maxlength="8" placeholder="ABCDE" required style="font-family:var(--font-pixel);letter-spacing:.2em;text-transform:uppercase"></div>
+      <button type="button" class="btn small" id="scanBtn" style="width:100%;margin-bottom:.6rem">📷 สแกน QR Code</button>
+      <video id="scanVideo" class="hidden" playsinline muted style="width:100%;border:3px solid var(--line)"></video>
+      <p class="muted" style="font-size:.85rem">หรือเปิดกล้องมือถือแล้วสแกน QR บนจอ ระบบจะใส่รหัสให้เอง</p>
+      <button class="btn warm" style="width:100%" type="submit">เข้าร่วม</button>
+    </form>
+  </div>
+
+  <div class="modal hidden" id="howModal" role="dialog" aria-modal="true">
+    <div class="pframe">
+      <button type="button" class="btn small close" data-close>✕</button>
+      <h2 class="thai-head">วิธีเล่น</h2>
+      <ol style="line-height:1.8;padding-left:1.2rem" id="howList">
+        <li>โฮสต์สร้างห้อง เลือกโหมด แล้วฉายจอขึ้นโปรเจกเตอร์ ผู้เล่นสแกน QR หรือใส่รหัส (5–50 คน)</li>
+        <li>ทุกคนได้ <b>บทบาท</b> ที่ทุกคนเห็น และ <b>คุณลักษณะ</b> ลับ (สีน้ำเงิน · แดง · เหลือง) บนมือถือ</li>
+        <li>1 วัน = 1 นาที ทุกเช้าเปิดไพ่สถานการณ์ (หยุดอ่าน 45 วินาที) ทุกคนเลือกบนมือถือ</li>
+        <li>กลางวันลงขันพลังใจทำโครงการ ส่งหัวใจให้เพื่อน แจ้งเหตุ กลางคืนคุณลักษณะลับทำงาน</li>
+        <li>ไม่มีใครตกรอบ คนที่ถูกโหวตแค่ใช้ความสามารถของคุณลักษณะไม่ได้ จบเกมด้วยการเปิดเผยและสะท้อนคิด</li>
+      </ol>
+    </div>
+  </div>
+  <div class="modal hidden" id="aboutModal" role="dialog" aria-modal="true">
+    <div class="pframe">
+      <button type="button" class="btn small close" data-close>✕</button>
+      <h2 class="thai-head">เกี่ยวกับ COMMOON SOCIETY</h2>
+      <p style="line-height:1.8">บอร์ดเกมดิจิทัลแบบผู้เล่นหลายคนสำหรับห้องเรียน ผสมบทบาทลับ กลยุทธ์ร่วมมือ และการเรียนรู้ทางสังคมและอารมณ์ (SEL) เพื่อชวนนักเรียนเห็นผลของการกลั่นแกล้ง การกีดกัน และพลังของการยื่นมือช่วยกัน</p>
+      <p class="muted" style="line-height:1.7">การกระทำทั้งหมดในเกมเป็นเรื่องสมมติ ใช้ชื่อเล่นในเกมเท่านั้น และไม่มีการประเมินตัวนักเรียนจริง</p>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script type="module" src="/js/landing.js"></script>
+</body>
+</html>
