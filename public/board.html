@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="th" data-theme="day">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>School Board · COMMOON SOCIETY</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@400;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body data-theme="day">
+  <div class="stage" id="stage"></div>
+  <button class="sound-toggle pframe" id="soundBtn" type="button"></button>
+  <div class="modal hidden" id="waiting"><div class="pframe center-msg"><div class="pixel-title" style="font-size:.8rem">COMMOON SOCIETY</div><div class="big" id="waitMsg">รอครูเริ่มเกม…</div><div class="room-code" id="waitCode"></div><div class="muted" id="waitCount"></div></div></div>
+  <script src="/socket.io/socket.io.js"></script>
+  <script type="module">
+    import { $, call, params, getSocket, syncClock } from '/js/common.js';
+    import { BoardView } from '/js/boardui.js';
+    import { BoardAudio } from '/js/audio.js';
+    import { ICON } from '/js/icons.js';
+    const audio = new BoardAudio({ key: 'audio-board' });
+    const code = (params.get('room') || '').toUpperCase();
+    const board = new BoardView($('#stage'), { audio });
+    let enabled = false; // sound starts off on the extra screen so it never doubles the host page
+    const sync = () => { const b = $('#soundBtn'); b.innerHTML = enabled ? ICON.soundOn : ICON.soundOff; b.classList.toggle('off', !enabled); b.setAttribute('aria-label', enabled ? 'ปิดเสียง' : 'เปิดเสียง'); b.title = enabled ? 'ปิดเสียง' : 'เปิดเสียง'; };
+    $('#soundBtn').onclick = () => { enabled = !enabled; audio.unlock(); audio.setMusic(enabled); audio.setSfx(enabled); sync(); };
+    audio.setMusic(false); audio.setSfx(false);
+    sync();
+    const s = getSocket();
+    s.on('connect', async () => { const r = await call('board:watch', { code }); if (!r.ok) { $('#waiting').classList.remove('hidden'); $('#waitMsg').textContent = 'ไม่พบห้องนี้'; } });
+    s.on('room:closed', () => { $('#waiting').classList.remove('hidden'); $('#waitMsg').textContent = 'ห้องถูกปิดแล้ว'; });
+    s.on('state:public', (st) => {
+      syncClock(st.serverNow);
+      const lobby = !st.game;
+      $('#waiting').classList.toggle('hidden', !lobby);
+      $('#waitCode').textContent = st.code;
+      $('#waitCount').textContent = `ผู้เล่น ${st.players.length} คน`;
+      board.update(st);
+    });
+  </script>
+</body>
+</html>
