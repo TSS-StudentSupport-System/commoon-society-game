@@ -281,7 +281,7 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => unbind(socket));
 });
 
-server.listen(PORT, () => {
+server.listen(PORT, '0.0.0.0', () => {
   console.log(`\n  COMMOON SOCIETY running on http://localhost:${PORT}`);
   for (const ifs of Object.values(os.networkInterfaces())) {
     for (const i of ifs || []) if (i.family === 'IPv4' && !i.internal) console.log(`  On the same Wi-Fi: http://${i.address}:${PORT}`);
